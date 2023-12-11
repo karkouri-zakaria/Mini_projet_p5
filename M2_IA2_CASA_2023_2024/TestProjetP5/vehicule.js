@@ -17,7 +17,6 @@ class Vehicule {
     this.displaceRange = 0.3;
     this.distanceCercleWander = 100;
     this.target = target;
-
   }
 
   update() {
@@ -34,15 +33,12 @@ class Vehicule {
   
       if (vehicule.isLeader) {
         let distanceToTarget = dist(vehicule.position.x, vehicule.position.y, this.target.x, this.target.y);
-        let totalRadius = vehicule.rayon - outerRadius/4; // Rayon du véhicule + distance minimale souhaitée
+        let totalRadius = vehicule.rayon - outerRadius/4;
         console.log(totalRadius);
 
       if (distanceToTarget < totalRadius) {
-        // Calculer la direction depuis le centre du cercle blanc vers le véhicule
         let direction = createVector(vehicule.position.x - this.target.x, vehicule.position.y - this.target.y);
         direction.normalize();
-        
-        // Déplacer le véhicule à la périphérie du cercle blanc
         vehicule.position.set(this.target.x + direction.x * totalRadius, this.target.y + direction.y * totalRadius);
       }
         vehicule.arrive(this.target);
@@ -62,9 +58,7 @@ class Vehicule {
     this.velocity.limit(this.maxSpeed);
     this.position.add(this.velocity);
     this.velocity.mult(0.98);
-    if (this.path.length === 0 || this.position.dist(this.path[this.path.length - 1]) < 20) {
-      this.path.push(this.position.copy());
-    } else this.path = [];
+    if (this.path.length === 0 || this.position.dist(this.path[this.path.length - 1]) < 20)this.path.push(this.position.copy()); else this.path = [];
     if (this.path.length > this.nbMaxPointsChemin) this.path.shift();
   }
   
@@ -139,7 +133,6 @@ class Vehicule {
     let desiredSeparation = 20;
     let sum = createVector();
     let count = 0;
-
     for (let other of others) {
       let d = p5.Vector.dist(this.position, other.position);
       if (d > 0 && d < desiredSeparation) {
@@ -150,7 +143,6 @@ class Vehicule {
         count++;
       }
     }
-
     if (count > 0) {
       sum.div(count);
       sum.setMag(this.maxSpeed);
@@ -208,11 +200,9 @@ class Vehicule {
     let x = this.wanderRadius * cos(theta);
     let y = this.wanderRadius * sin(theta);
     wanderPoint.add(x, y);
-  
     let avoidForceObstacles = this.avoid(obstacles);
     avoidForceObstacles.mult(1.5);
     this.applyForce(avoidForceObstacles);
-  
     let desiredSpeed = p5.Vector.sub(wanderPoint, this.position);
     let force = desiredSpeed.setMag(this.maxForce);
     this.applyForce(force);
@@ -220,18 +210,13 @@ class Vehicule {
     this.checkScreenBoundaries();
   }
   
-  
   checkScreenBoundaries() {
     if (this.position.x < 0 || this.position.x > width) this.velocity.x *= -1;
     if (this.position.y < 0 || this.position.y > height)
     this.velocity.y *= -1;
     this.position.x = constrain(this.position.x, 0, width);
     this.position.y = constrain(this.position.y, 0, height);
-  }
-  
-  
-  
-  
+  }  
 
   applyForce(force) {
     this.velocity.add(force);
